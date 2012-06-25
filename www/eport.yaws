@@ -1,0 +1,8 @@
+<html>	
+<erl>
+out(A) ->
+    CallbackMod = econnect,
+    Opts = [{origin, "http://" ++ (A#arg.headers)#headers.host}],
+    {websocket, CallbackMod, Opts}.
+</erl>
+</html>
