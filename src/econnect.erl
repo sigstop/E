@@ -32,6 +32,12 @@ handle_message({text, <<"ES_ONLINE">>}) ->
 handle_message({close,_Num,_Bin}) ->
     unregister(eserver),
     error_logger:info_msg("EServer Disconnected and Unregistered~n");
+handle_message({text,B})->
+    <<_H,T/binary>> = B,
+    Term = binary_to_term(T),
+    error_logger:info_msg("Binary Received:~n~p~n",[B]),
+    error_logger:info_msg("Term Received:~n~p~n",[Term]),
+    error_logger:info_msg("My Pid = ~p~n",[self()]);
 handle_message(A)->
     error_logger:info_msg("Received:~n~p~n",[A]),
     error_logger:info_msg("My Pid = ~p~n",[self()]),
@@ -41,5 +47,7 @@ send(ID,Message) when is_atom(ID) ->
     Pid = whereis(ID),
     send(Pid,Message);
 send(Pid,Message) when is_pid(Pid) ->
-    yaws_api:websocket_send(Pid, {text, list_to_binary(Message)}).
+    Term = term_to_binary(Message),
+    Payload = <<?BERT_VERSION,Term/binary>>,
+    yaws_api:websocket_send(Pid, {binary, Term}).
 

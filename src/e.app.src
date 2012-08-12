@@ -1,0 +1,14 @@
+{application, e,
+ [
+  {description, "Web-based windows environment"},
+  {vsn, "1"},
+  {registered, []},
+  {modules, [econnect,
+             eclient]},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+%  {mod, { eclient, []}},
+  {env, []}
+ ]}.

@@ -8,3 +8,5 @@
 -define(YAWS_LOG_DIR,"../log").
 -define(YAWS_ID,"elib").
 -define(YAWS_LOCAL_PORT,{0,0,0,0}).
+
+-define(BERT_VERSION,194).
