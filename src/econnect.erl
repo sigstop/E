@@ -4,15 +4,16 @@
 
 -include("../include/e.hrl").
 
-start(_Servername,IPAddress,Port,Docroot) -> 
+start(_Servername,IPAddress,Port) -> 
     code:add_patha(?YAWS_EBIN_DIRS),
+    file:make_dir(?YAWS_LOG_DIR),
     error_logger:info_msg("Starting Embedded Yaws!~n"),
     GL = [{logdir,?YAWS_LOG_DIR},
 	  {ebin_dir, ?YAWS_EBIN_DIRS}],
     SL = [{doc_root,?YAWS_DOC_ROOT},
 	  {port,Port},
 	  {listen,?YAWS_LOCAL_PORT}],
-    yaws:start_embedded(Docroot,SL,GL),
+    yaws:start_embedded(?YAWS_DOC_ROOT,SL,GL),
     self().
 
 stop(_Servername,IPAddress,Port,Docroot) -> 

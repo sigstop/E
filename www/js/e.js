@@ -5,6 +5,7 @@ Ext.namespace('E');
 
 var windows = new Object();
 var images = new Object();
+var global_image;
 
 
 // connection.send('CONNECT'); // Send the message 'Ping' to the server
@@ -34,29 +35,35 @@ var createWindow = function(tuple) {
     var Width = tuple[2];
     var Height = tuple[3];
     var Title = tuple[4];
+
     E.Window = 
 	Ext.extend(Ext.Window, {
 	    title:Title,
 	    width:Width,
 	    height:Height,
-	    autoscroll:true		
+	    autoscroll:true
 	});
-    windows[tuple[1].value] = new E.Window;
-    windows[tuple[1].value].show();
+    console.log(ID);
+    windows[ID] = new E.Window;
+    windows[ID].show();
 };
 
 var windowAddImage = function(tuple) {
     var WindowID = tuple[1];
     var ImageID = tuple[2];
-    var Data = tuple[3];
-    var Image;
-    var image_reader = new FileReader();
-    image_reader.onloadend = function() {
-	RawData = image_reader.result;
-	Image = Bert.decode(RawData);
-    };
-    image_reader.readAsBinaryString(Data);
-    images[ImageID.value] = Image;
+    var Data = tuple[3].value;
+
+    var img =  "data:image/png;base64," + window.btoa(Data);
+
+    var Image = new Ext.Component({
+	autoEl: { tag: 'img', height: 200, width : 200, src: img}
+    });
+
+    windows[WindowID].add( Image );
+    windows[WindowID].doLayout();
+
+    images[ImageID] = Image;
+
 };
 	
 connection.onmessage = function(msg) {

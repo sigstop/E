@@ -11,7 +11,7 @@ start()->
 start(Name,Address,Port)->
     crypto:start(),
     {ok,ParsedAddress} = inet_parse:ipv4_address(Address),
-    econnect:start(Name,ParsedAddress,Port,?YAWS_DOC_ROOT).
+    econnect:start(Name,ParsedAddress,Port).
 
 
 stop()->
