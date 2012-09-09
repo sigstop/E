@@ -17,3 +17,6 @@ window_update_image(WindowID,ImageID,ImageData) when is_atom(WindowID),
 						     is_binary(ImageData)->
     econnect:send(eserver,{window_update_image,WindowID,ImageID,ImageData}).
 
+launch_eclock(Width,Height)->
+    econnect:send(eserver,{launch_eclock,float(Width),float(Height)}).
+

@@ -28,6 +28,9 @@ var emsg_handle = function(tuple) {
     case 'window_update_image':
 	windowUpdateImage(tuple);
 	break;
+    case 'launch_eclock':
+	launchEClock(tuple);
+	break;
     default: 
 	alert("The EClient sent unknown command: " + command)
     }
@@ -79,11 +82,78 @@ var windowUpdateImage = function(tuple) {
     var Image = new Ext.Component({
 	autoEl: { tag: 'img', width: images[ImageID].autoEl.width, height: images[ImageID].autoEl.height, src: img}
     });
+    
+//    images[ImageID].autoEl.src = img;
+//    images[ImageID].doAutoRender();
+//    images[ImageID].show();
 
     windows[WindowID].remove(images[ImageID]);
     windows[WindowID].add(Image);
     windows[WindowID].doLayout();
     images[ImageID] = Image;
+};
+
+function sketchClock(processing) {
+    // Override draw function, by default it will be called 60 times per second
+    processing.draw = function() {
+
+	// determine center and max clock arm length
+	var centerX = processing.width / 2, centerY = processing.height / 2;
+	var maxArmLength = Math.min(centerX, centerY);
+	
+	function drawArm(position, lengthScale, weight) {
+            processing.strokeWeight(weight);
+	    processing.line(centerX, centerY,
+			    centerX + Math.sin(position * 2 * Math.PI) * lengthScale * maxArmLength,
+			    centerY - Math.cos(position * 2 * Math.PI) * lengthScale * maxArmLength);
+	}
+	
+	// erase background
+	processing.background(224);
+	
+	var now = new Date();
+	
+	// Moving hours arm by small increments
+	var hoursPosition = (now.getHours() % 12 + now.getMinutes() / 60) / 12;
+	drawArm(hoursPosition, 0.5, 5);
+	
+	// Moving minutes arm by small increments
+	var minutesPosition = (now.getMinutes() + now.getSeconds() / 60) / 60;
+	drawArm(minutesPosition, 0.80, 3);
+	
+	// Moving hour arm by second increments
+	var secondsPosition = now.getSeconds() / 60;
+	drawArm(secondsPosition, 0.90, 1);
+    }
+};
+
+function launchEClock(tuple)
+{
+    var Width = tuple[1];
+    var Height = tuple[2];
+    canvasWindow = new Ext.Window({
+	title:'EClock'
+	,height:Height + 32   //132
+	,width:Width + 14    //114
+	,items:{
+	    xtype: 'box',
+	    autoEl:{
+		tag: 'canvas'
+	    }
+	    ,listeners:{
+		render:{
+		    scope:this
+		    ,fn:function(){
+			var processingInstance = new Processing(canvasWindow.items.items[0].el.dom, sketchClock);
+			processingInstance.size(Width,Height);
+
+		    }
+		}
+	    }
+	}
+    });
+    canvasWindow.show();
+//    var processingInstance = new Processing(canvasWindow.items.items[0].el.dom, sketchProc);
 };
 	
 connection.onmessage = function(msg) {

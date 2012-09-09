@@ -27,9 +27,12 @@
 
 
 
-
 </head>
 <body>
-<embed src="ewindows-entry.html">
+ <erl>
+ out(Arg) ->
+    {yssi, "ewindows-entry.yaws"}.
+ </erl>
+
 </body>
 </html>
