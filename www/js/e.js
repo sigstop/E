@@ -11,7 +11,7 @@ var global_image;
 // connection.send('CONNECT'); // Send the message 'Ping' to the server
 connection.onopen = function () {
     var Value = 1;
-    connection.send(Bert.encode(Bert.tuple(Bert.atom("hello"),Value))); // Notification that the XServer is online
+    connection.send(Bert.encode(Bert.tuple(Bert.atom("hello"),Value))); // Notification that the EServer is online
     connection.send('ES_ONLINE');
 };
 
