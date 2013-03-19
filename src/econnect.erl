@@ -46,7 +46,8 @@ handle_message({text,B})->
     Term = binary_to_term(T),
     error_logger:info_msg("Binary Received:~n~p~n",[B]),
     error_logger:info_msg("Term Received:~n~p~n",[Term]),
-    error_logger:info_msg("My Pid = ~p~n",[self()]);
+    error_logger:info_msg("My Pid = ~p~n",[self()]),
+    spawn(eclient_stub,handle_message,[Term]);
 handle_message(A)->
     error_logger:info_msg("Received:~n~p~n",[A]),
     error_logger:info_msg("My Pid = ~p~n",[self()]),
