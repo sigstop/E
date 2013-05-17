@@ -37,17 +37,23 @@ stop(_Servername,IPAddress,Port,Docroot) ->
 handle_message({text, <<"ES_ONLINE">>}) ->
     Pid = self(),
     register(eserver,self()),
-    error_logger:info_msg("EServer Registered as {eserver,~p}~n",[Pid]);
+    error_logger:info_msg("EServer Registered as {eserver,~p}~n",[Pid]),
+    noreply;
 handle_message({close,_Num,_Bin}) ->
     unregister(eserver),
-    error_logger:info_msg("EServer Disconnected and Unregistered~n");
+    error_logger:info_msg("EServer Disconnected and Unregistered~n"),
+    noreply;
+
 handle_message({text,B})->
     <<_H,T/binary>> = B,
     Term = binary_to_term(T),
     error_logger:info_msg("Binary Received:~n~p~n",[B]),
     error_logger:info_msg("Term Received:~n~p~n",[Term]),
     error_logger:info_msg("My Pid = ~p~n",[self()]),
-    spawn(eclient_stub,handle_message,[Term]);
+    spawn(eclient_stub,handle_message,[Term]),
+    noreply;
+
+
 handle_message(A)->
     error_logger:info_msg("Received:~n~p~n",[A]),
     error_logger:info_msg("My Pid = ~p~n",[self()]),

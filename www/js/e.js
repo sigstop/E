@@ -26,8 +26,8 @@ function createUUID() {
 // connection.send('CONNECT'); // Send the message 'Ping' to the server
 connection.onopen = function () {
     var Value = 1;
-    connection.send(Bert.encode(Bert.tuple(Bert.atom("hello"),Value))); // Notification that th EServer is online
     connection.send('ES_ONLINE');
+    connection.send(Bert.encode(Bert.tuple(Bert.atom("hello"),Value))); // Notification that th EServer is online
 };
 
 var ProcCode; 
@@ -59,6 +59,9 @@ var emsg_handle = function(tuple) {
         break;
     case 'erl_form_result':
 	deliverResult(tuple);
+	break;
+    case 'flow_table_data':
+	deliverFlowTable(tuple);
 	break;
     default: 
 	alert("The EClient sent unknown command: " + command)
@@ -297,9 +300,11 @@ connection.onmessage = function(msg) {
     var reader = new FileReader();
     reader.onloadend = function() {
         var string = reader.result;
+	console.log(string);
 	Message = Bert.decode(string);
 	console.log(Message.toString());
 	var tuple = Message.value;
+	console.log(tuple[2].toString());
 	emsg_handle(tuple);
     };
     reader.readAsBinaryString(blob );
