@@ -14,10 +14,10 @@ start(_Servername,IPAddress,Port,ConfOptions) when is_list(ConfOptions) ->
     GL = [
 	  {logdir,?YAWS_LOG_DIR},
 	  {ebin_dir, ?YAWS_EBIN_DIRS}],
-    DocRoot = "/Users/sbailey/Git/E/www",
+    DocRoot = "./lib/E/www",
     SL = [
-	  {xtra_docroots,["/Users/sbailey/Git/erland/www"]},
-	  {opaque,[{"vdir","/apps/ /Users/sbailey/Git/erland/www"}]},
+	  {xtra_docroots,["./www"]},
+	  {opaque,[{"vdir","/apps/ ./www"}]},
 	  {port,Port},
 	  {listen,?YAWS_LOCAL_PORT}], 
 %%   yaws:start_embedded(?YAWS_DOC_ROOT,SL,GL),
@@ -66,4 +66,7 @@ send(Pid,Message) when is_pid(Pid) ->
     Term = term_to_binary(Message),
     Payload = <<?BERT_VERSION,Term/binary>>,
     yaws_api:websocket_send(Pid, {binary, Term}).
+
+send_text(Pid,Message) when is_pid(Pid) ->
+    yaws_api:websocket_send(Pid, {text, Message}).
 

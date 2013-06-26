@@ -2,7 +2,7 @@
 -define(E_DEFAULT_ADDRESS,"127.0.0.1").
 -define(E_DEFAULT_PORT,28080).
 
--define(E_ROOT,"/Users/sbailey/Git/E").
+-define(E_ROOT,"./lib/E").
 -define(YAWS_EBIN_DIRS,[lists:append("?E_ROOT","/ebin")]).
 -define(YAWS_DOC_ROOT,lists:append(?E_ROOT,"/www")).
 -define(YAWS_LOG_DIR,lists:append(?E_ROOT,"/log")).

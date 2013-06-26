@@ -1,6 +1,6 @@
 //    document.write(e.data.type);
 
-var connection = new WebSocket("ws://localhost:28080/eport.yaws");
+var connection = new WebSocket("ws://" + location.host + "/eport.yaws");
 Ext.namespace('E');
 
 var windows = new Object();
@@ -60,11 +60,8 @@ var emsg_handle = function(tuple) {
     case 'erl_form_result':
 	deliverResult(tuple);
 	break;
-    case 'flow_table_data':
-	deliverFlowTable(tuple);
-	break;
     default: 
-	alert("The EClient sent unknown command: " + command)
+	eClientStub(tuple);
     }
 };
 
@@ -294,6 +291,8 @@ function launchProcessing(tuple)
     canvasWindow.show();
 };
 	
+var m_data;
+
 connection.onmessage = function(msg) {
     var blob = msg.data;
     var Message;
@@ -301,6 +300,7 @@ connection.onmessage = function(msg) {
     reader.onloadend = function() {
         var string = reader.result;
 	console.log(string);
+	m_data = string;
 	Message = Bert.decode(string);
 	console.log(Message.toString());
 	var tuple = Message.value;
