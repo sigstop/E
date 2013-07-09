@@ -3,6 +3,8 @@
 var connection = new WebSocket("ws://" + location.host + "/eport.yaws");
 Ext.namespace('E');
 
+var noExt = "E.js should not make calls to Ext. make calls to myApp.getController('erland') instead, and ask it to generate view components for you";
+
 var windows = new Object();
 var images = new Object();
 var object_cache = new Object();
@@ -111,6 +113,12 @@ var deliverResult = function(tuple) {
 };
 
 var constructTextArea = function(tuple) {
+
+    // don't make EXT calls!!
+    console.warn ( noExt );
+    return ;
+
+/*
     var ID = tuple[1].value;
     TextArea = new Ext.form.TextArea({eid: ID, 
           value: ">",
@@ -145,74 +153,9 @@ var constructTextArea = function(tuple) {
               } }});
     console.log("New TextArea: " + ID);
     object_cache[ID] = TextArea;
-};
-
-    
-/*
-var createWindow = function(tuple) {
-    var ID = tuple[1].value;
-    var Width = tuple[2];
-    var Height = tuple[3];
-    var Title = tuple[4];
-
-    E.Window = 
-        Ext.extend(Ext.Window, {
-            title:Title,
-            width:Width,
-            height:Height,
-            autoscroll:true
-        });
-    console.log("New Window: " + ID);
-    windows[ID] = new E.Window;
-    windows[ID].doLayout();
-    windows[ID].show();
-};
 */
 
-/*
-var windowAddImage = function(tuple) {
-    var WindowID = tuple[1].value;
-    var ImageID = tuple[2].value;
-    var ImageWidth = tuple[3];
-    var ImageHeight = tuple[4];
-    var Data = tuple[5].value;
-
-    console.log("Window add image: " + WindowID );
-
-    var img =  "data:image/png;base64," + window.btoa(Data);
-
-    var Image = new Ext.Component({
-        autoEl: { tag: 'img', width: ImageWidth, height: ImageHeight, src: img}
-    });
-
-    windows[WindowID].add( Image );
-    windows[WindowID].doLayout();
-    images[ImageID] = Image;
 };
-*/
-
-/*
-var windowUpdateImage = function(tuple) {
-    var WindowID = tuple[1].value;
-    var ImageID = tuple[2].value;
-    var Data = tuple[3].value;
-
-    var img =  "data:image/png;base64," + window.btoa(Data);
-
-    var Image = new Ext.Component({
-        autoEl: { tag: 'img', width: images[ImageID].autoEl.width, height: images[ImageID].autoEl.height, src: img}
-    });
-    
-//    images[ImageID].autoEl.src = img;
-//    images[ImageID].doAutoRender();
-//    images[ImageID].show();
-
-    windows[WindowID].remove(images[ImageID]);
-    windows[WindowID].add(Image);
-    windows[WindowID].doLayout();
-    images[ImageID] = Image;
-};
-*/
 
 function sketchClock(processing) {
     // Override draw function, by default it will be called 60 times per second
@@ -270,30 +213,15 @@ function launchProcessing(tuple)
     var Height = tuple[2];
     var FuncName = tuple[3];
 
-    //console.log( "launchProcessing" , FuncName );
+    var myApp = erlandUI.app.getApplication();
+    var myC = myApp.getController('erland');
 
-    canvasWindow = new Ext.Window({
-        title: FuncName
-        ,height:Height + 32   //132
-        ,width:Width + 14    //114
-        ,items:{
-            xtype: 'box',
-            autoEl:{
-                tag: 'canvas'
-            }
-            ,listeners:{
-                render:{
-                    scope:this
-                    ,fn:function(){
-                        var processingInstance = new Processing(canvasWindow.items.items[0].el.dom, window[FuncName]);
-                        processingInstance.size(Width,Height);
+    var dom = myC.createWindowCanvas( FuncName , Width , Height );
+    var processingInstance = new Processing(dom, FuncName );
+    processingInstance.size(Width,Height);
 
-                    }
-                }
-            }
-        }
-    });
-    canvasWindow.show();
+    console.log( "launchProcessing" , FuncName );
+
 };
         
 var m_data;
