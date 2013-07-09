@@ -56,7 +56,8 @@ var emsg_handle = function(tuple) {
         //windowAddImage(tuple);  
         break;
     case 'window_update_image':
-        windowUpdateImage(tuple);
+        myC.setWindowImage(tuple);
+        //windowUpdateImage(tuple);
         break;
     case 'launch_eclock':
         launchEClock(tuple);
@@ -147,6 +148,7 @@ var constructTextArea = function(tuple) {
 };
 
     
+/*
 var createWindow = function(tuple) {
     var ID = tuple[1].value;
     var Width = tuple[2];
@@ -165,7 +167,9 @@ var createWindow = function(tuple) {
     windows[ID].doLayout();
     windows[ID].show();
 };
+*/
 
+/*
 var windowAddImage = function(tuple) {
     var WindowID = tuple[1].value;
     var ImageID = tuple[2].value;
@@ -185,7 +189,9 @@ var windowAddImage = function(tuple) {
     windows[WindowID].doLayout();
     images[ImageID] = Image;
 };
+*/
 
+/*
 var windowUpdateImage = function(tuple) {
     var WindowID = tuple[1].value;
     var ImageID = tuple[2].value;
@@ -206,6 +212,7 @@ var windowUpdateImage = function(tuple) {
     windows[WindowID].doLayout();
     images[ImageID] = Image;
 };
+*/
 
 function sketchClock(processing) {
     // Override draw function, by default it will be called 60 times per second
@@ -245,29 +252,16 @@ function launchEClock(tuple)
 {
     var Width = tuple[1];
     var Height = tuple[2];
-    canvasWindow = new Ext.Window({
-        title:'EClock'
-        ,height:Height + 32   //132
-        ,width:Width + 14    //114
-        ,items:{
-            xtype: 'box',
-            autoEl:{
-                tag: 'canvas'
-            }
-            ,listeners:{
-                render:{
-                    scope:this
-                    ,fn:function(){
-                        var processingInstance = new Processing(canvasWindow.items.items[0].el.dom, sketchClock);
-                        processingInstance.size(Width,Height);
 
-                    }
-                }
-            }
-        }
-    });
-    canvasWindow.show();
-//    var processingInstance = new Processing(canvasWindow.items.items[0].el.dom, sketchProc);
+    // make a call to the view controller to create the window
+    // and get back a ref to the DOM for processing
+    var myApp = erlandUI.app.getApplication();
+    var myC = myApp.getController('erland');
+
+    var dom = myC.createWindowCanvas( 'EClock' , Width , Height );
+    var processingInstance = new Processing(dom, sketchClock);
+    processingInstance.size(Width,Height);
+
 };
 
 function launchProcessing(tuple)
