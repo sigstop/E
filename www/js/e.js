@@ -166,6 +166,8 @@ var windowAddImage = function(tuple) {
     var ImageHeight = tuple[4];
     var Data = tuple[5].value;
 
+    console.log("Window add image: " + WindowID );
+
     var img =  "data:image/png;base64," + window.btoa(Data);
 
     var Image = new Ext.Component({
@@ -266,6 +268,8 @@ function launchProcessing(tuple)
     var Width = tuple[1];
     var Height = tuple[2];
     var FuncName = tuple[3];
+
+    //console.log( "launchProcessing" , FuncName );
 
     canvasWindow = new Ext.Window({
 	title: FuncName

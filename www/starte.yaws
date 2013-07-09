@@ -5,14 +5,10 @@
     <title>E:localhost:28080</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.3.1/resources/css/ext-all.css" /> 
-
-    <!-- Load the Ext JS base JavaScript. -->
-    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.3.1/adapter/ext/ext-base.js"></script> 
+    <!-- Load the Sencha touch JS base JavaScript. -->
+    <script type="text/javascript" src="lib/sencha-touch-all-debug.js"></script> 
+    <link href="lib/sencha-touch-debug.css" rel="stylesheet" type="text/css" />
     
-    <!-- Load the rest of Ext JS.  -->
-    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.3.1/ext-all.js"></script>
-
     <!-- Load BERT script -->
     <script type="text/javascript" src="lib/bert.js"></script>
 
@@ -28,14 +24,15 @@
     <!-- Load startx script -->
     <script type="text/javascript" src="js/e.js"></script>
 
-
-
-</head>
-<body>
+ <!-- Additional loads go in the HEAD-->
  <erl>
  out(Arg) ->
     {yssi, "ewindows-entry.yaws"}.
  </erl>
 
+</head>
+
+<body>
 </body>
+
 </html>
