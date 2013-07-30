@@ -58,6 +58,7 @@ var emsg_handle = function(tuple) {
         //windowAddImage(tuple);  
         break;
     case 'window_update_image':
+        //console.log ( 'emsg_handle:window_update_image');
         myC.setWindowImage(tuple);
         //windowUpdateImage(tuple);
         break;
@@ -232,12 +233,12 @@ connection.onmessage = function(msg) {
     var reader = new FileReader();
     reader.onloadend = function() {
         var string = reader.result;
-        console.log(string);
+        //console.log(string);
         m_data = string;
         Message = Bert.decode(string);
-        console.log(Message.toString());
+        //console.log(Message.toString());
         var tuple = Message.value;
-        console.log(tuple[2].toString());
+        //console.log(tuple[2].toString());
         emsg_handle(tuple);
     };
     reader.readAsBinaryString(blob );
