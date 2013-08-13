@@ -37,9 +37,20 @@ var ProcCode;
 var emsg_handle = function(tuple) {
     var command = tuple[0];
 
+    /*
+     All events sent by the server should make
+     function calls to the erland controller.
+     Which is part of the erland app
+     */
+
     // get pointers to the erland UI
     var myApp = erlandUI.app.getApplication();
     var myC = myApp.getController('erland');
+
+    /*
+      then ANY rule below should make a call to
+      myC.something()
+     */
 
     switch(command.value)
     {
@@ -51,14 +62,19 @@ var emsg_handle = function(tuple) {
         break;
     case 'create_window':
         //createWindow(tuple);
+        // create a window/tab in the erland UI
         myC.createWindow(tuple);
         break;
     case 'window_add_image':
+        // 
+        // create add a '<img/>' tag to an existing window
         myC.setWindowImage(tuple);
         //windowAddImage(tuple);  
         break;
     case 'window_update_image':
         //console.log ( 'emsg_handle:window_update_image');
+        // update the '<img/>' tag in an existing window
+        // (this is the same as 'setWindowImage()'
         myC.setWindowImage(tuple);
         //windowUpdateImage(tuple);
         break;
@@ -73,6 +89,7 @@ var emsg_handle = function(tuple) {
         break;
     default: 
         eClientStub(tuple);
+        break;
     }
 };
 
@@ -103,7 +120,8 @@ var constructE = function(tuple) {
         constructTextArea(tuple);
         break;
     default:
-        alert("Invalid type argument to new: " + Type)
+        alert("Invalid type argument to new: " + Type) ;
+        break;
     }
 };
 
@@ -197,12 +215,20 @@ function launchEClock(tuple)
     var Width = tuple[1];
     var Height = tuple[2];
 
-    // make a call to the view controller to create the window
-    // and get back a ref to the DOM for processing
+    /*
+     make a call to the view controller to create the window
+     and get back a ref to the DOM for processing
+    */
+
+    // so first get a pointer to the controller
     var myApp = erlandUI.app.getApplication();
     var myC = myApp.getController('erland');
 
+    // then call something that creates a window
+    // and returns a pointer to the canvas.dom inside that window
     var dom = myC.createWindowCanvas( 'EClock' , Width , Height );
+
+    // now processing can talk to that dom directly
     var processingInstance = new Processing(dom, sketchClock);
     processingInstance.size(Width,Height);
 
@@ -210,6 +236,9 @@ function launchEClock(tuple)
 
 function launchProcessing(tuple)
 {
+    /*
+     see the comments in launchEClock() above
+     */
     var Width = tuple[1];
     var Height = tuple[2];
     var FuncName = tuple[3];
